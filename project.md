@@ -1,0 +1,21 @@
+****    BACKEND-SERVER: NODE.JS (EXPRESS.JS)
+****    FRONT-END FRAMEWORK: NEXT.JS
+****    DATABASE: MONGODB
+****    STORAGE: UPLOADS DIRECTORY
+****
+****    FRONT-END LANGUAGES: HTML, SASS & JSX
+****    BACKEND LANGUAGES: JS
+****    BACKEND API: REST
+****
+****    AUTHENTICATION: COOKIES & JWT
+****    ENVIRONMENT VARIABLES: ENV FILE
+****
+****
+****
+****
+****
+****
+****
+****
+****
+****
