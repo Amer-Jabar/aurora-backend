@@ -1,0 +1,28 @@
+version: '20'
+services:
+  client:
+    image: 'client'
+    ports:
+      - '3000:3000'
+    links:
+      - server
+    depends_on:
+      - server
+  server:
+    restart: always
+    build: .
+    ports:
+      - '4445:4445'
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb:/data/db
+volumes:
+  mongodb:
+    driver: local

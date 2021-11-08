@@ -7,24 +7,36 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import router from './router/router.js';
 
+const PORT = 4445 | process.env.PORT;
+const IP = '127.0.0.1' | process.env.IP;
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 app.use(router);
 
-(async () => {
-    await mongo.connect('mongodb://localhost:27017/nextjsApp', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
-    });
-})();
+const connectToDatabase = async () => {
+    try {
+        const DB_HOSTNAME = process.env?.DB_HOSTNAME || 'localhost';
+        const DB_PORT = process.env?.DB_PORT || '27017';
+        const DB_NAME = process.env?.DB_NAME || 'nextjsApp';
 
+        await mongo.connect(`mongodb://${DB_HOSTNAME}:${DB_PORT}/${DB_NAME}`, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false
+        });
+        console.log('[+] Connected To Database...')    
+    } catch (e) {
+        console.log('[X] An Error Happened While Connecting To Database...')
+        console.log(e);
+    }
+}
 
-const PORT = Number(process.env.PORT) + 1;
-const IP = process.env.IP;
-
-const callBack = () => console.log(`[+] Server Started On PORT: ${PORT}`);
+const callBack = () => {
+    console.log(`[+] Server Started On PORT: ${PORT || process.env.PORT} - ${IP || process.env.IP}`);
+    connectToDatabase()
+};
 
 app.listen(PORT, IP, callBack);

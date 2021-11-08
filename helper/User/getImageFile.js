@@ -5,19 +5,16 @@ import path from 'path';
 const getImageFile = async (image) => {
 
     const relativePath = path.resolve();
-    const imagePath = `${relativePath}\\uploads\\images\\profile\\${image}`;
+    const imagePath = `${relativePath}/uploads/images/profile/${image}`;
 
     let imageFile = null;
 
     try {
         imageFile = fs.readFileSync(imagePath);
     } catch (e) {
-        console.log(e);
+        console.log('Were not able to retrieve image file!');
     } finally {
-        if ( !imageFile )
-            return {};
-
-        return imageFile;
+        return imageFile ? imageFile : null;
     }
 }
 

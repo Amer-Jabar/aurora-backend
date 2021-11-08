@@ -35,7 +35,7 @@ const router = express.Router();
 router.get('/api/user/login', isAuthorized, async (req, res) => {
     
     const { username, password } = await extractUserId(req);
-    
+
     const foundUser = await User.findOne({ username });
 
     if ( !foundUser )
@@ -63,6 +63,8 @@ router.get('/api/user/login', isAuthorized, async (req, res) => {
 
 router.post('/api/user/signup', async (req, res) => {
     
+    console.log('Signing up')
+
     const SECRET = process.env.SECRET_COOKIE_PASSWORD;
 
     const { userToken } = req.body;
@@ -117,11 +119,12 @@ router.post('/api/user/logout', isAuthorized, async (req, res) => {
 router.get('/api/users', async (req, res) => {
     
     let userIds = null;
-    
+
     try {
         userIds = (await User.find({})).map(
             ({ _id, username }) => ({ _id, username })
         );
+
     } catch (e) {
         console.log(e);
     } finally {
@@ -141,14 +144,14 @@ router.get('/api/users/:userId', isAuthorized, async (req, res) => {
         return res.status(401).send();
 
     let userInfo = null;
-
+    
     try {
         userInfo = await User.findById(userId, { password: 0 });
     } catch (e) {
-        console.log(e);
+        console.log('Here is at api/users/:userId\n\n', e);
     } finally {
         if ( !userInfo )
-            return res.status(404).send();        
+            return res.sendStatus(404);        
 
         return res.status(200).send(userInfo);        
     }
@@ -212,14 +215,14 @@ router.get('/api/users/:userId/image', async (req, res) => {
 
     try {
         const { image } = await User.findById(userId);
-        profileImage = await getImageFile(image);    
+        profileImage = await getImageFile(image);
     } catch (e) {
-        console.log(e);
+        console.log('Image was not found!');
     } finally {
         if ( !profileImage )
             return res.status(404).send();
 
-        return res.status(200).end(profileImage);
+        return res.status(200).end(profileImage ? profileImage : null);
     }
 })
 
@@ -227,7 +230,27 @@ router.post('/api/users/:userId/image', isAuthorized, async (req, res) => {
 
     const { userId } = req.params;
 
-    const relativePath = `${path.resolve()}\\uploads\\images\\profile`;
+    let uploadsFolderExists = null;
+
+    try {
+        uploadsFolderExists = fs.readdirSync(`${path.resolve()}/uploads`);
+        console.log(uploadsFolderExists);
+    } catch (e) {
+        uploadsFolderExists = null;
+    }
+    if ( !uploadsFolderExists ) {
+        try {
+            fs.mkdirSync(`${path.resolve()}/uploads`);
+            fs.mkdirSync(`${path.resolve()}/uploads/images`);
+            fs.mkdirSync(`${path.resolve()}/uploads/images/profile`);
+            fs.mkdirSync(`${path.resolve()}/uploads/images/product`);    
+        } catch (e) {
+            console.log('Were not able to create uploads folder!');
+        }
+    }
+
+    const relativePath = `${path.resolve()}/uploads/images/profile`;
+    console.log(uploadsFolderExists);
 
     const form = new formidable({ multiples: true });
     form.parse(req, async (error, fields, files) => {
@@ -237,7 +260,7 @@ router.post('/api/users/:userId/image', isAuthorized, async (req, res) => {
         const existingImage = (await User.findById(userId)).image;
         try {
             if ( existingImage )
-                fs.rmSync(`${relativePath}\\${existingImage}`);
+                fs.rmSync(`${relativePath}/${existingImage}`);
         } catch (e) {
             console.log('File Is Already Deleted!')
         }
@@ -278,7 +301,7 @@ router.delete('/api/users/:userId/image', isAuthorized, async (req, res) => {
 
     const { image } = await User.findById(_id);
 
-    const imagePath = `${relativePath}\\uploads\\images\\profile\\${image}`;
+    const imagePath = `${relativePath}/uploads/images/profile/${image}`;
 
     fs.rm(imagePath, () => {});
     const imageDeleted = await User.findByIdAndUpdate(_id, { image: null });
@@ -348,9 +371,14 @@ router.get('/api/users/:userId/purchases', isAuthorized, async (req, res) => {
                 select: 'username'
             }]
         }))
-        .transactions.filter(purchase => purchase.buyer.username === user.username);
+        .transactions.filter(
+            purchase => purchase.buyer && purchase.buyer.username === user.username 
+            ? purchase
+            : null
+        );
         return res.status(200).send(userPurchases);
     } catch (e) {
+        console.log(e);
         return res.sendStatus(409);
     }
 })
@@ -398,7 +426,7 @@ router.get('/api/users/:userId/:property/length', async (req, res) => {
             userPropertiesLength === null ||
             userPropertiesLength === undefined
         )
-            return res.statusStatus(404);        
+            return res.sendStatus(404);        
 
         return res.status(200).send({ userPropertiesLength });        
     }
@@ -436,7 +464,7 @@ router.patch('/api/users/:userId', isAuthorized, async (req , res) => {
     const userId = await extractUserId(req);
     const { title, value } = req.body;
 
-    if ( !title || !value )
+    if ( title === null || title === undefined || value === null || value === undefined )
         return res.status(400).send();
     if ( String(userProfileId) !== String(userId) )
         return res.status(401).send();    

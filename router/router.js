@@ -9,7 +9,9 @@ import likeRouter from './likeRouter.js';
 import activityRouter from './activityRouter.js';
 import messageRouter from './messageRouter.js';
 
+
 const router = express.Router();
+
 router.use(userRouter);
 router.use(productRouter);
 router.use(reviewRouter);

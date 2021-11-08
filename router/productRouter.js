@@ -113,8 +113,8 @@ router.get('/api/products/:productId/image', async (req, res) => {
     const { productId } = req.params;
     const relativePath = path.resolve();
 
-    const imagePath = `${relativePath}\\uploads\\images\\product\\${productId}`;
-    const fallbackImagePath = `${relativePath}\\uploads\\images\\product\\fallbackImage.png`;
+    const imagePath = `${relativePath}/uploads/images/product/${productId}`;
+    const fallbackImagePath = `${relativePath}/uploads/images/product/fallbackImage.png`;
 
     fs.readFile(imagePath, 
         (err, data) => {
@@ -131,7 +131,7 @@ router.post('/api/products/:productId/image', isAuthorized, async (req, res) => 
 
     const { productId } = req.params;
 
-    const relativePath = `${path.resolve()}\\uploads\\images\\product`;
+    const relativePath = `${path.resolve()}/uploads/images/product`;
     let error = null;
 
     const userId = await extractUserId(req);
@@ -150,10 +150,11 @@ router.post('/api/products/:productId/image', isAuthorized, async (req, res) => 
     )
         return res.sendStatus(401);
 
-    const form = new formidable({
+    const form = formidable({
         maxFileSize: 10000000,
         multiples: true
     });
+
     form.parse(req, (err, fields, files) => {
         if ( err ) {
             error = err;
@@ -161,7 +162,7 @@ router.post('/api/products/:productId/image', isAuthorized, async (req, res) => 
         }
 
         const { image } = files;
-        const { name: imageId } = image;
+        const imageId = image?.name;
         const filePath = image.path;
 
         if ( productId !== imageId )
@@ -176,7 +177,7 @@ router.post('/api/products/:productId/image', isAuthorized, async (req, res) => 
         if ( error )
             return res.sendStatus(403);
 
-        return res.status(200).send('Hello')
+        return res.status(200).send();
     })
 })
 
@@ -394,7 +395,7 @@ router.post('/api/products/:category', isAuthorized, async (req, res) => {
 
 router.put('/api/products/:category', isAuthorized, async (req, res) => {
 
-    const relativePath = `${path.resolve()}\\uploads\\images\\product`;
+    const relativePath = `${path.resolve()}/uploads/images/product`;
     let error = null;
 
     const form = new formidable({ multiples: true });
