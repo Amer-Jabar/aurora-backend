@@ -7,7 +7,7 @@ RUN mkdir uploads/images
 RUN mkdir uploads/images/profile
 RUN mkdir uploads/images/product
 
-COPY package*.json .
+COPY package*.json /usr/src/app/
 
 ENV NODE_ENV production
 ENV PORT 4445
