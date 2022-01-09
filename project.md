@@ -10,8 +10,8 @@
 ****    AUTHENTICATION: COOKIES & JWT
 ****    ENVIRONMENT VARIABLES: ENV FILE
 ****
-****
-****
+****    CONTAINER: DOCKER
+****    CLOUD: AZURE
 ****
 ****
 ****
