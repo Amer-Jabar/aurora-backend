@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/499082aa-df33-4299-91e8-41f4af5f661c/resourceGroups/DefaultResourceGroup-EAU/providers/Microsoft.Web/sites/aurora-shop",
+    "appService.deploySubpath": "."
+}

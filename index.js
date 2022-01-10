@@ -7,8 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import router from './router/router.js';
 
-const PORT = 4445 | process.env.PORT;
-const IP = '127.0.0.1' | process.env.IP;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
@@ -35,8 +34,8 @@ const connectToDatabase = async () => {
 }
 
 const callBack = () => {
-    console.log(`[+] Server Started On PORT: ${PORT || process.env.PORT} - ${IP || process.env.IP}`);
+    console.log(`[+] Server Started On PORT: ${process.env.PORT || PORT}`);
     connectToDatabase()
 };
 
-app.listen(PORT, IP, callBack);
+app.listen(PORT, callBack);
