@@ -1,21 +1,24 @@
-****    BACKEND-SERVER: NODE.JS (EXPRESS.JS)
-****    FRONT-END FRAMEWORK: NEXT.JS
-****    DATABASE: MONGODB
-****    STORAGE: UPLOADS DIRECTORY
+****	BACKEND SERVER        ****
+****	Backend-server: Node.js
+****	Front-end framework: Next.js
+****	Authentication: JWT in cookies
 ****
-****    FRONT-END LANGUAGES: HTML, SASS & JSX
-****    BACKEND LANGUAGES: JS
-****    BACKEND API: REST
-****
-****    AUTHENTICATION: COOKIES & JWT
-****    ENVIRONMENT VARIABLES: ENV FILE
-****
-****    CONTAINER: DOCKER
-****    CLOUD: AZURE
-****
-****
-****
-****
-****
-****
-****
+****	Hosted on: Azure webservices
+****	Host url: aurora-shop.azurewebsites.net
+****	Deployed from: local git repository
+
+****	Server vendor: windows server
+****	Storage: internal server storage
+****	Server CPU specs:
+****		CPU type: Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz
+****		CPU cores: 2
+****	Storage capacity: 1GB
+
+
+
+
+
+
+
+
+

@@ -17,7 +17,7 @@ import updateUserProperty from '../helper/User/updateUserProperty.js';
 import getUserProperties, { getUserPropertyLength } from '../helper/User/getUserProperties.js';
 import getImageFile from '../helper/User/getImageFile.js';
 import Review from '../model/Review.js';
-
+import validateUserCredentials from '../helper/Auth/validateUserCredentials.js'
 
 const router = express.Router();
 
@@ -62,8 +62,6 @@ router.get('/api/user/login', isAuthorized, async (req, res) => {
 })
 
 router.post('/api/user/signup', async (req, res) => {
-    
-    console.log('Signing up')
 
     const SECRET = process.env.SECRET_COOKIE_PASSWORD;
 
@@ -77,6 +75,12 @@ router.post('/api/user/signup', async (req, res) => {
 
     if ( usernameExists )
         return res.status(406).send('Username Already Exists!');
+
+    const credentialValidity = validateUserCredentials(username, password);
+    if ( !credentialValidity.username )
+        return res.status(400).send('Username must be longer and equal to 4 letters!');
+    if ( !credentialValidity.password )
+        return res.status(400).send('Password must be longer and equal to 4 letters!');
 
     await User.create({
         username,
