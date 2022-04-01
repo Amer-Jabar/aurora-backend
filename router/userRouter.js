@@ -102,7 +102,6 @@ router.post('/api/user/signup', async (req, res) => {
 })
 
 router.post('/api/user/logout', isAuthorized, async (req, res) => {
-
     let _id = null, 
         username = null;
         
